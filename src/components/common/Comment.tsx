@@ -31,6 +31,7 @@ export const Comment: React.FC<CommentProps> = ({
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
   const [replyText, setReplyText] = useState("");
   const user = { id: "1" };
+  console.log(showActions,showDeleteConfirm);
 
   const hasLiked = user ? comment.likes.includes(user.id) : false;
   const hasDisliked = user ? comment.dislikes.includes(user.id) : false;
