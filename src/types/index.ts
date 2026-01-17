@@ -19,3 +19,9 @@ export interface CommentType {
 }
 
 export type SortOption = 'newest' | 'most-liked' | 'most-disliked';
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+}
