@@ -3,6 +3,7 @@ import { Dropdown } from '../ui/Dropdown';
 import type { CommentType, SortOption } from '../../types/index';
 import './comment-section.scss';
 import { useState } from 'react';
+import { CommentInput } from './commentInput';
 
 // Mock initial data
 const MOCK_COMMENTS: CommentType[] = [
@@ -50,7 +51,24 @@ const MOCK_COMMENTS: CommentType[] = [
 
 export const CommentSection: React.FC = () => {
  const [sortOption, setSortOption] = useState<SortOption>('newest'); 
-
+    const [comments, setComments] = useState<CommentType[]>(MOCK_COMMENTS);
+    console.log(comments);
+    const handleCreateComment = (text: string) => {
+   
+    const newComment: CommentType = {
+      id: Math.random().toString(36).substr(2, 9),
+      userId: 'u1',
+      user: { id: 'u1', name: 'John Doe', avatarUrl: '', email: 'john@example.com' },
+      content: text,
+      createdAt: new Date().toISOString(),
+      parentId: null,
+      likes: [],
+      dislikes: [],
+      replies: []
+    };
+    setComments(prev => [newComment, ...prev]);
+    
+  };
   return (
     <div className="comment-section">
       <div className="comment-section__header">
@@ -62,6 +80,7 @@ export const CommentSection: React.FC = () => {
           label="Sort by"
         />
       </div>
+       <CommentInput onSubmit={handleCreateComment} />
 
     </div>
   );
