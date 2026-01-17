@@ -1,14 +1,7 @@
 import React, { useState } from "react";
-import {
-  Code,
-  Image as ImageIcon,
-  Link,
-  AtSign,
-  ChevronDown,
-} from "lucide-react";
+import { API_ENDPOINTS } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
 import { Modal } from "../ui/Modal";
-import { API_ENDPOINTS } from "../../config/api";
 import "./comment-input.scss";
 
 interface CommentInputProps {
@@ -51,9 +44,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     <div className={`comment-input-block ${isFocused ? "focused" : ""}`}>
       <div className="comment-input-header">
         {/* Mock Dropdown */}
-        <button className="type-selector">
-          Choose a type <ChevronDown size={14} />
-        </button>
+        <h1 className="heading">Add Comment</h1>
       </div>
 
       <div className="comment-input-body">
