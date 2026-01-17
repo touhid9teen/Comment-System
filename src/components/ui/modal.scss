@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .modal-overlay {
   position: fixed;
@@ -6,7 +6,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8); // Facebook mostly uses white overlay for some, dark for others. Dark is safer for attention.
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); // Facebook mostly uses white overlay for some, dark for others. Dark is safer for attention.
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
@@ -46,7 +51,7 @@
       align-items: center;
       justify-content: center;
       color: $text-secondary;
-      
+
       &:hover {
         background: $divider;
       }
@@ -59,6 +64,12 @@
 }
 
 @keyframes modal-pop {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
