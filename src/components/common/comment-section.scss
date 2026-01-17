@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .comment-section {
   max-width: 800px;
@@ -26,3 +26,8 @@
   }
 }
 
+.comment-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
