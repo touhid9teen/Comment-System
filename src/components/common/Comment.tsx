@@ -65,8 +65,8 @@ export const Comment: React.FC<CommentProps> = ({ comment, onReply, onReact, onE
           <div className="comment__header">
             <span className="comment__author">{comment.user.name}</span>
             {/* Mock Badge */}
-            <span className="comment__badge">🔷</span> 
-            <span className="comment__time">
+             
+            <span className="comment-time">
               {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
             </span>
           </div>
