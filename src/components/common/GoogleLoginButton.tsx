@@ -1,13 +1,12 @@
 import React from "react";
 import "./google-login-button.scss";
 
-const BACKEND_URL =
-  import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
+import { API_ENDPOINTS } from "../../config/api";
 
 export const GoogleLoginButton: React.FC = () => {
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth endpoint
-    window.location.href = `${BACKEND_URL}/api/auth/google`;
+    window.location.href = `${API_ENDPOINTS}/api/auth/google`;
   };
 
   return (
