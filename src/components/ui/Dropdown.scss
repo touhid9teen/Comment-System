@@ -1,0 +1,58 @@
+@use '../../styles/variables' as *;
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    color: $text-secondary;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $bg-hover;
+    }
+    
+    &-text {
+      font-size: 15px;
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background: $bg-card;
+    border-radius: 8px;
+    box-shadow: $shadow-2;
+    padding: 8px 0;
+    z-index: 100;
+    min-width: 200px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  &__item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: $text-primary;
+    
+    &:hover {
+      background-color: $bg-hover;
+    }
+
+    &--selected {
+      background-color: $secondary-blue;
+      color: $primary-blue;
+    }
+  }
+}
