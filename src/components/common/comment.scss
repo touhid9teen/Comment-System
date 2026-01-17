@@ -150,6 +150,16 @@
     border-left: 2px solid #f0f0f0;
   }
 
+  // Flatten nesting after depth 1 - all deeper replies stay at level 1 visually
+  &--flat {
+    .comment__replies {
+      // -56px = -(40px avatar + 16px gap) to compensate for parent's content offset
+      margin-left: -56px !important;
+      padding-left: 0 !important;
+      border-left: none !important;
+    }
+  }
+
   // Inline Reply
   &__inline-reply {
     margin-top: 12px;
