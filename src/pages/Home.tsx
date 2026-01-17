@@ -2,6 +2,7 @@ import React from 'react';
 import { Avatar } from '../components/ui/Avatar';
 import './home.scss';
 import { UpvoteIcon, DownvoteIcon, CommentIcon } from '../components/ui/Icons';
+import { CommentSection } from '../components/common/CommentSection';
 
 export const Home: React.FC = () => {
   return (
@@ -35,6 +36,12 @@ export const Home: React.FC = () => {
            <button className="action-btn"><UpvoteIcon /> 1.2K</button>
            <button className="action-btn"><DownvoteIcon /> 6</button>
            <button className="action-btn"><CommentIcon /> 45</button>
+        </div>
+
+
+        {/* Comment Section */}
+        <div className="post-comments-container">
+           <CommentSection />
         </div>
 
       </div>

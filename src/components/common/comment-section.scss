@@ -1,0 +1,28 @@
+@use '../../styles/variables' as *;
+
+.comment-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+
+    h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0;
+    }
+  }
+
+  &__list {
+    margin-top: 16px;
+  }
+}
+
