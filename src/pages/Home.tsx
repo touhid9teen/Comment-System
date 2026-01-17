@@ -1,7 +1,7 @@
-import { MessageCircle, Share2, ThumbsUp } from 'lucide-react';
 import React from 'react';
 import { Avatar } from '../components/ui/Avatar';
 import './home.scss';
+import { UpvoteIcon, DownvoteIcon, CommentIcon } from '../components/ui/Icons';
 
 export const Home: React.FC = () => {
   return (
@@ -32,9 +32,9 @@ export const Home: React.FC = () => {
 
         {/* Post Actions */}
         <div className="post-actions">
-           <button className="action-btn"><ThumbsUp /> Like</button>
-           <button className="action-btn"><MessageCircle /> Comment</button>
-           <button className="action-btn"><Share2 /> Share</button>
+           <button className="action-btn"><UpvoteIcon /> 1.2K</button>
+           <button className="action-btn"><DownvoteIcon /> 6</button>
+           <button className="action-btn"><CommentIcon /> 45</button>
         </div>
 
       </div>
