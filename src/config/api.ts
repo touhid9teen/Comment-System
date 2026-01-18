@@ -6,5 +6,6 @@ export const API_ENDPOINTS = {
   // Auth
   AUTH: {
     GOOGLE: `${API_BASE_URL}/api/auth/google`,
+    PROFILE: `${API_BASE_URL}/api/auth/me`,
   },
 };

@@ -4,6 +4,8 @@ import { Edit2, Trash2 } from "lucide-react";
 import type { CommentType } from "../../types";
 import { UpvoteIcon, DownvoteIcon, CommentIcon, ReplyIcon } from "../ui/Icons";
 import { Avatar } from "../ui/Avatar";
+import { useAuth } from "../../context/AuthContext";
+import { AuthModal } from "./AuthModal";
 import "./comment.scss";
 
 interface CommentProps {
@@ -23,15 +25,13 @@ export const Comment: React.FC<CommentProps> = ({
   onDelete,
   depth = 0, // Default to 0 for root-level comments
 }) => {
+  const { user, isAuthenticated } = useAuth();
   const [isReplying, setIsReplying] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
-  const [showActions, setShowActions] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
   const [replyText, setReplyText] = useState("");
-  const user = { id: "1" };
-  console.log(showActions,showDeleteConfirm);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const hasLiked = user ? comment.likes.includes(user.id) : false;
   const hasDisliked = user ? comment.dislikes.includes(user.id) : false;
@@ -42,6 +42,22 @@ export const Comment: React.FC<CommentProps> = ({
   // Limit visual nesting to depth 1 (after first reply, keep everything at the same level)
   const isNestedBeyondLimit = depth >= 1;
   const nextDepth = depth + 1;
+
+  const handleReplyClick = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setIsReplying(!isReplying);
+  };
+
+  const handleReactClick = (type: "like" | "dislike") => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    onReact(comment.id, type);
+  };
 
   const handleReplySubmit = () => {
     if (!replyText.trim()) return;
@@ -62,11 +78,7 @@ export const Comment: React.FC<CommentProps> = ({
 
   return (
     <div className={`comment ${isNestedBeyondLimit ? "comment--flat" : ""}`}>
-      <div
-        className="comment__container"
-        onMouseEnter={() => setShowActions(true)}
-        onMouseLeave={() => setShowActions(false)}
-      >
+      <div className="comment__container">
         <div className="comment__avatar">
           <Avatar
             src={comment.user.avatarUrl}
@@ -117,7 +129,7 @@ export const Comment: React.FC<CommentProps> = ({
             <div className="comment__votes">
               <button
                 className={`vote-btn ${hasLiked ? "active" : ""}`}
-                onClick={() => onReact(comment.id, "like")}
+                onClick={() => handleReactClick("like")}
                 title="Upvote"
               >
                 <UpvoteIcon size={18} />
@@ -129,7 +141,7 @@ export const Comment: React.FC<CommentProps> = ({
               </span>
               <button
                 className={`vote-btn ${hasDisliked ? "active" : ""}`}
-                onClick={() => onReact(comment.id, "dislike")}
+                onClick={() => handleReactClick("dislike")}
                 title="Downvote"
               >
                 <DownvoteIcon size={18} />
@@ -151,10 +163,7 @@ export const Comment: React.FC<CommentProps> = ({
               </button>
             )}
 
-            <button
-              className="action-btn reply-btn"
-              onClick={() => setIsReplying(!isReplying)}
-            >
+            <button className="action-btn reply-btn" onClick={handleReplyClick}>
               <ReplyIcon size={16} />
               Reply
             </button>
@@ -170,7 +179,7 @@ export const Comment: React.FC<CommentProps> = ({
                 </button>
                 <button
                   className="action-btn danger"
-                  onClick={() => setShowDeleteConfirm(true)}
+                  onClick={() => onDelete && onDelete(comment.id)}
                 >
                   <Trash2 size={16} />
                 </button>
@@ -233,6 +242,11 @@ export const Comment: React.FC<CommentProps> = ({
           )}
         </div>
       </div>
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Log in to join the conversation"
+      />
     </div>
   );
 };

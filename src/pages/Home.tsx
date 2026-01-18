@@ -3,9 +3,21 @@ import { Avatar } from "../components/ui/Avatar";
 import "./home.scss";
 import { UpvoteIcon, DownvoteIcon, CommentIcon } from "../components/ui/Icons";
 import { CommentSection } from "../components/common/CommentSection";
+import { useAuth } from "../context/AuthContext";
+import { AuthModal } from "../components/common/AuthModal";
 
 export const Home: React.FC = () => {
   const [showComments, setShowComments] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const handleActionClick = (action: () => void) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    action();
+  };
 
   return (
     <div className="home-page">
@@ -36,10 +48,16 @@ export const Home: React.FC = () => {
 
         {/* Post Actions */}
         <div className="post-actions">
-          <button className="action-btn">
+          <button
+            className="action-btn"
+            onClick={() => handleActionClick(() => {})}
+          >
             <UpvoteIcon /> 1.2K
           </button>
-          <button className="action-btn">
+          <button
+            className="action-btn"
+            onClick={() => handleActionClick(() => {})}
+          >
             <DownvoteIcon /> 6
           </button>
           <button
@@ -57,6 +75,12 @@ export const Home: React.FC = () => {
           </div>
         )}
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Log in to continue"
+      />
     </div>
   );
 };

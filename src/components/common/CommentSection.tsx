@@ -9,7 +9,6 @@ import { CommentTree } from "./CommentTree";
 export const CommentSection: React.FC = () => {
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [comments, setComments] = useState<CommentType[]>(MOCK_COMMENTS);
-  console.log(comments);
   const handleCreateComment = (text: string) => {
     const newComment: CommentType = {
       id: Math.random().toString(36).substr(2, 9),
