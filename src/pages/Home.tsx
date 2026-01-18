@@ -3,12 +3,14 @@ import { Avatar } from "../components/ui/Avatar";
 import "./home.scss";
 import { CommentIcon } from "../components/ui/Icons";
 import { CommentSection } from "../components/common/CommentSection";
-// import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { AuthModal } from "../components/common/AuthModal";
+import { useComments } from "../context/CommentContext";
 
 export const Home: React.FC = () => {
   const [showComments, setShowComments] = useState(false);
-  // const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const { totalComments } = useComments();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
@@ -54,9 +56,16 @@ export const Home: React.FC = () => {
           </button> */}
           <button
             className="action-btn"
-            onClick={() => setShowComments(!showComments)}
+            onClick={() => {
+              if (!isAuthenticated) {
+                setShowAuthModal(true);
+              } else {
+                setShowComments(!showComments);
+              }
+            }}
           >
-            <CommentIcon /> {showComments ? "Hide Comments" : "45 Comments"}
+            <CommentIcon />{" "}
+            {showComments ? "Hide Comments" : `${totalComments} Comments`}
           </button>
         </div>
 
