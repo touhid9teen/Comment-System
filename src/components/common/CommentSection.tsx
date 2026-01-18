@@ -1,47 +1,38 @@
-import { useState } from "react";
-import { MOCK_COMMENTS, sortOptions } from "../../data/variable";
-import type { CommentType, SortOption } from "../../types/index";
+import { sortOptions } from "../../data/variable";
+import type { SortOption } from "../../types/index";
+import { useComments } from "../../context/CommentContext";
 import { Dropdown } from "../ui/Dropdown";
 import "./comment-section.scss";
 import { CommentInput } from "./commentInput";
 import { CommentTree } from "./CommentTree";
 
 export const CommentSection: React.FC = () => {
-  const [sortOption, setSortOption] = useState<SortOption>("newest");
-  const [comments, setComments] = useState<CommentType[]>(MOCK_COMMENTS);
+  const {
+    comments,
+    sortOption,
+    setSortOption,
+    createComment,
+    replyToComment,
+    updateComment,
+    deleteComment,
+    reactToComment,
+    loading,
+    error,
+  } = useComments();
 
-  
-  const handleCreateComment = (text: string) => {
-    const newComment: CommentType = {
-      id: Math.random().toString(36).substr(2, 9),
-      userId: "u1",
-      user: {
-        id: "u1",
-        name: "John Doe",
-        avatarUrl: "",
-        email: "john@example.com",
-      },
-      content: text,
-      createdAt: new Date().toISOString(),
-      parentId: null,
-      likes: [],
-      dislikes: [],
-      replies: [],
-    };
-    setComments((prev) => [newComment, ...prev]);
-  };
+  if (loading && comments.length === 0) {
+    return <div className="comment-section-loading">Loading comments...</div>;
+  }
 
-  const handleReply = () => {};
+  if (error) {
+    return <div className="comment-section-error">{error}</div>;
+  }
 
-  const handleReaction = () => {};
-
-  const handleEdit = () => {};
-
-  const handleDelete = () => {};
   return (
     <div className="comment-section">
       <div className="comment-section__header">
-        <h3>Comments</h3>
+        <h3>Comments ({comments.length})</h3>
+        {/* Comment count could be recursive count in a real app, but for now length of root is fine or need total count from API */}
         <Dropdown
           items={sortOptions}
           selected={sortOption}
@@ -49,16 +40,22 @@ export const CommentSection: React.FC = () => {
           label="Sort by"
         />
       </div>
-      <CommentInput onSubmit={handleCreateComment} />
+      <CommentInput onSubmit={createComment} />
       <div className="comment-section__list">
-        <CommentTree
-          comments={comments}
-          sortOption={sortOption}
-          onReply={handleReply}
-          onReact={handleReaction}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        {comments.length === 0 ? (
+          <div className="comment-section-empty">
+            No comments yet. Be the first to share your thoughts!
+          </div>
+        ) : (
+          <CommentTree
+            comments={comments}
+            sortOption={sortOption}
+            onReply={replyToComment}
+            onReact={reactToComment}
+            onEdit={updateComment}
+            onDelete={deleteComment}
+          />
+        )}
       </div>
     </div>
   );
