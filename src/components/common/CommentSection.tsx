@@ -20,9 +20,10 @@ export const CommentSection: React.FC = () => {
     error,
   } = useComments();
 
-  if (loading && comments.length === 0) {
-    return <div className="comment-section-loading">Loading comments...</div>;
-  }
+  // Move loading check down so header is always visible
+  // if (loading && comments.length === 0) {
+  //   return <div className="comment-section-loading">Loading comments...</div>;
+  // }
 
   if (error) {
     return <div className="comment-section-error">{error}</div>;
@@ -42,7 +43,9 @@ export const CommentSection: React.FC = () => {
       </div>
       <CommentInput onSubmit={createComment} />
       <div className="comment-section__list">
-        {comments.length === 0 ? (
+        {loading && comments.length === 0 ? (
+          <div className="comment-section-loading">Loading comments...</div>
+        ) : comments.length === 0 ? (
           <div className="comment-section-empty">
             No comments yet. Be the first to share your thoughts!
           </div>

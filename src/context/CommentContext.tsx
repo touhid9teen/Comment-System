@@ -95,7 +95,17 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       const result = await commentService.getAll(sortOption);
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>", result);
       if (result.success) {
-        setComments(result.data);
+        // The backend returns { success: true, data: { comments: [], ... } }
+        // We typed result.data as CommentType[] in service, but actual response checks show it's nested
+        // Cast to any momentarily or fix the service type to reflect reality.
+        const data: any = result.data;
+        if (Array.isArray(data)) {
+          setComments(data);
+        } else if (data && Array.isArray(data.comments)) {
+          setComments(data.comments);
+        } else {
+          setComments([]);
+        }
       }
       setError(null);
     } catch (err: any) {
