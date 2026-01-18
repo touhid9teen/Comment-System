@@ -35,7 +35,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
         console.log("Profile Data:", response.data);
         // Check if token comes with profile (sometimes used instead of just cookies)
-        const responseData = response.data as any; // Cast to access potential dynamic fields
+        const responseData = response.data as {
+          token?: string;
+          data?: { token?: string };
+        };
         const token = responseData.token || responseData.data?.token;
 
         if (response.data.success && response.data.data) {
@@ -90,6 +93,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

@@ -1,14 +1,39 @@
-$primary-blue: #1877F2;
-$secondary-blue: #e7f3ff;
-$bg-body: #F0F2F5;
-$bg-card: #FFFFFF;
-$bg-comment: #F0F2F5;
-$bg-hover: #F2F2F2;
-$text-primary: #050505;
-$text-secondary: #65676B;
-$divider: #CED0D4;
-$shadow-1: 0 1px 2px rgba(0, 0, 0, 0.2);
-$shadow-2: 0 12px 12px rgba(0, 0, 0, 0.1);
+// Polished Color Palette
+$primary-color: #1890ff;
+$primary-hover: #40a9ff;
+$primary-active: #096dd9;
+$danger-color: #ff4d4f;
+$text-primary: #262626;
+$text-secondary: #595959; // Darker secondary for better contrast
+$text-tertiary: #8c8c8c;
+$border-color: #e6e6e6; // Smoother border
+$bg-color: #ffffff;
+$bg-secondary: #fafafa; 
+$bg-gray: #e7e5e5;// Light background for contrast areas
+$bg-hover: rgba(2, 1, 1, 0.04);
 
-$font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-$radius: 18px;
+// Typography
+$font-family:
+  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+  Arial, sans-serif;
+$font-size-base: 14px;
+$line-height-base: 1.5;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Radius
+$border-radius-sm: 4px;
+$border-radius-md: 6px;
+$border-radius-lg: 8px;
+$radius: 18px; // Legacy support if needed or removing it
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);

@@ -3,7 +3,7 @@
 
 .app-header {
   background: white;
-  box-shadow: $shadow-1;
+  box-shadow: $shadow-sm;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -22,7 +22,7 @@
   }
 
   .logo {
-    color: $primary-blue;
+    color: $primary-color;
     font-size: 24px;
     font-weight: 800;
   }
@@ -38,7 +38,7 @@
     align-items: center;
     gap: 8px;
     font-weight: 600;
-  } 
+  }
 
   .logout-btn,
   .login-btn {

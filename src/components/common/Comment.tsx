@@ -126,7 +126,7 @@ export const Comment: React.FC<CommentProps> = ({
                         addSuffix: true,
                       })
                     : "just now";
-                } catch (e) {
+                } catch {
                   return "just now";
                 }
               })()}

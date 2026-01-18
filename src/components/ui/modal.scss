@@ -21,11 +21,11 @@
 }
 
 .modal-content {
-  background: $bg-card;
+  background: $bg-color;
   width: 90%;
   max-width: 500px;
   border-radius: 8px;
-  box-shadow: $shadow-2;
+  box-shadow: $shadow-md;
   display: flex;
   flex-direction: column;
   animation: modal-pop 0.3s ease-out;
@@ -35,7 +35,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid $divider;
+    border-bottom: 1px solid $border-color;
 
     .modal-title {
       font-size: 20px;
@@ -46,14 +46,14 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: $bg-body;
+      background: $bg-secondary;
       display: flex;
       align-items: center;
       justify-content: center;
       color: $text-secondary;
 
       &:hover {
-        background: $divider;
+        background: $bg-hover;
       }
     }
   }

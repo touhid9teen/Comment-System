@@ -1,4 +1,4 @@
-@use '../styles/variables' as *;
+@use "../styles/variables" as *;
 
 .home-page {
   display: flex;
@@ -8,11 +8,11 @@
 }
 
 .post-card {
-  background: $bg-card;
+  background: $bg-color;
   width: 100%;
-  max-width: 680px; 
+  max-width: 680px;
   border-radius: 8px;
-  box-shadow: $shadow-1;
+  box-shadow: $shadow-md;
   overflow: hidden;
 
   .post-header {
@@ -24,7 +24,7 @@
     .post-info {
       display: flex;
       flex-direction: column;
-      
+
       .author-name {
         font-weight: 600;
         color: $text-primary;
@@ -45,7 +45,7 @@
     .post-image-placeholder {
       width: 100%;
       height: 300px;
-      background-color: $divider;
+      background-color: $bg-gray;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -60,13 +60,13 @@
     justify-content: space-between;
     color: $text-secondary;
     font-size: 14px;
-    border-bottom: 1px solid $divider;
+    border-bottom: 1px solid $border-color;
   }
 
   .post-actions {
     display: flex;
     padding: 4px 16px;
-    border-bottom: 1px solid $divider;
+    border-bottom: 1px solid $border-color;
 
     .action-btn {
       flex: 1;
@@ -88,6 +88,4 @@
   .post-comments-container {
     padding: 16px;
   }
-
- 
 }

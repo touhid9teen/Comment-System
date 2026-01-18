@@ -113,18 +113,23 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       if (result.success) {
         // The backend returns { success: true, data: { comments: [], ... } }
         // We typed result.data as CommentType[] in service, but actual response checks show it's nested
-        // Cast to any momentarily or fix the service type to reflect reality.
-        const data: any = result.data;
+        const data = result.data as unknown as
+          | { comments: CommentType[] }
+          | CommentType[];
+
         if (Array.isArray(data)) {
           setComments(data);
-        } else if (data && Array.isArray(data.comments)) {
-          setComments(data.comments);
+        } else if (
+          data &&
+          Array.isArray((data as { comments: CommentType[] }).comments)
+        ) {
+          setComments((data as { comments: CommentType[] }).comments);
         } else {
           setComments([]);
         }
       }
       setError(null);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setError("Failed to load comments");
     } finally {
@@ -144,8 +149,11 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (result.success) {
         // Handle potential nested data structure like { data: { comment: ... } } or just { data: ... }
-        const data: any = result.data;
-        const newComment = data.comment || data;
+        const data = result.data as unknown as
+          | { comment: CommentType }
+          | CommentType;
+        const newComment =
+          (data as { comment: CommentType }).comment || (data as CommentType);
 
         // Check if the new comment has user info
         if (newComment.user && newComment.user.name) {
@@ -170,8 +178,11 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       const result = await commentService.reply(parentId, content);
       console.log("Reply Result:", result);
       if (result.success) {
-        const data: any = result.data;
-        const newReply = data.comment || data;
+        const data = result.data as unknown as
+          | { comment: CommentType }
+          | CommentType;
+        const newReply =
+          (data as { comment: CommentType }).comment || (data as CommentType);
         if (newReply.user && newReply.user.name) {
           setComments((prev) => addReplyToTree(prev, parentId, newReply));
           // Sync with server to ensure correct count and data consistency
@@ -192,8 +203,11 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       const result = await commentService.update(id, content);
       console.log("Update Result:", result);
       if (result.success) {
-        const data: any = result.data;
-        const updatedComment = data.comment || data;
+        const data = result.data as unknown as
+          | { comment: CommentType }
+          | CommentType;
+        const updatedComment =
+          (data as { comment: CommentType }).comment || (data as CommentType);
         setComments((prev) =>
           updateCommentInTree(prev, id, (c) => ({
             ...c,
@@ -224,8 +238,11 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       const result = await commentService.react(id, type);
       console.log("React Result:", result);
       if (result.success) {
-        const data: any = result.data;
-        const updatedStats = data.comment || data; // Assuming it returns the updated comment or stats
+        const data = result.data as unknown as
+          | { comment: CommentType }
+          | CommentType;
+        const updatedStats =
+          (data as { comment: CommentType }).comment || (data as CommentType);
 
         setComments((prev) =>
           updateCommentInTree(prev, id, (c) => ({
@@ -245,13 +262,18 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       const result = await commentService.getReplies(parentId);
       if (result.success) {
         // Cast as necessary based on unknown structure (similar to other endpoints)
-        const data: any = result.data;
-        let replies = [];
+        const data = result.data as unknown as
+          | { comments: CommentType[] }
+          | CommentType[];
+        let replies: CommentType[] = [];
 
         if (Array.isArray(data)) {
           replies = data;
-        } else if (data && Array.isArray(data.comments)) {
-          replies = data.comments;
+        } else if (
+          data &&
+          Array.isArray((data as { comments: CommentType[] }).comments)
+        ) {
+          replies = (data as { comments: CommentType[] }).comments;
         }
 
         // Update the tree with fetched replies
@@ -309,6 +331,7 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useComments = () => {
   const context = useContext(CommentContext);
   if (!context) {

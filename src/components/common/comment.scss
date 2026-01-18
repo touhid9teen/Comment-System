@@ -3,11 +3,12 @@
 
 .comment {
   margin-bottom: 0;
-  padding: 16px 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: $spacing-md 0;
+  border-bottom: 1px solid $bg-secondary; // Softer divider
   display: flex;
   flex-direction: column;
   position: relative;
+  transition: background-color 0.3s;
 
   &:last-child {
     border-bottom: none;
@@ -15,7 +16,7 @@
 
   &__container {
     display: flex;
-    gap: 16px;
+    gap: $spacing-md;
     align-items: flex-start;
   }
 
@@ -39,7 +40,7 @@
   &__author {
     font-size: 14px;
     font-weight: 600;
-    color: #262626;
+    color: $text-primary;
     text-decoration: none;
 
     &:hover {
@@ -53,17 +54,17 @@
 
   .comment-time {
     font-size: 12px;
-    color: #8c8c8c;
+    color: $text-tertiary;
   }
 
   &__body {
-    margin-bottom: 8px;
+    margin-bottom: $spacing-sm;
   }
 
   &__text {
     font-size: 15px;
-    color: #262626;
-    line-height: 1.5;
+    color: $text-primary;
+    line-height: $line-height-base;
     white-space: pre-wrap;
     word-break: break-word;
     margin: 0;
@@ -72,7 +73,7 @@
   &__footer {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: $spacing-md;
     flex-wrap: wrap;
   }
 
@@ -88,23 +89,27 @@
       width: 24px;
       height: 24px;
       padding: 0;
-      color: #8c8c8c;
-      border-radius: 4px;
+      color: $text-tertiary;
+      border-radius: $border-radius-sm;
+      background: transparent;
+      border: none;
+      cursor: pointer;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-        color: #262626;
+        background-color: $bg-hover;
+        color: $text-primary;
       }
 
       &.active {
-        color: #ff4d4f;
+        color: $danger-color;
+        background-color: rgba($danger-color, 0.1);
       }
     }
 
     .vote-count {
       font-size: 13px;
       font-weight: 500;
-      color: #595959;
+      color: $text-secondary;
       min-width: 16px;
       text-align: center;
     }
@@ -113,7 +118,7 @@
   &__divider {
     width: 1px;
     height: 14px;
-    background-color: #f0f0f0;
+    background-color: $border-color;
   }
 
   .action-btn {
@@ -122,17 +127,17 @@
     gap: 6px;
     font-size: 13px;
     font-weight: 500;
-    color: #8c8c8c;
+    color: $text-tertiary;
     background: none;
     border: none;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: $border-radius-sm;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-      color: #595959;
+      background-color: $bg-hover;
+      color: $text-secondary;
     }
   }
 
@@ -140,14 +145,21 @@
     display: flex;
     gap: 4px;
     margin-left: auto;
+
+    .danger {
+      &:hover {
+        color: $danger-color;
+        background-color: rgba($danger-color, 0.1);
+      }
+    }
   }
 
   // Nested Replies Area
   &__replies {
-    margin-top: 16px;
+    margin-top: $spacing-md;
     margin-left: 20px;
-    padding-left: 16px;
-    border-left: 2px solid #f0f0f0;
+    padding-left: $spacing-md;
+    border-left: 2px solid $border-color;
   }
 
   // Flatten nesting after depth 1 - all deeper replies stay at level 1 visually
@@ -160,40 +172,168 @@
     }
   }
 
+  // Edit Mode Styles
+  &__edit {
+    width: 100%;
+
+    &-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 12px;
+      font-size: 14px;
+      line-height: $line-height-base;
+      color: $text-primary;
+      background-color: $bg-color;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-md;
+      resize: vertical;
+      outline: none;
+      transition: all 0.2s;
+      font-family: inherit;
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+    }
+
+    &-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: $spacing-sm;
+      margin-top: $spacing-sm;
+
+      .btn {
+        padding: 6px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: $border-radius-md;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+      }
+
+      .btn-cancel {
+        background-color: transparent;
+        color: $text-secondary;
+
+        &:hover {
+          background-color: $bg-hover;
+          color: $text-primary;
+        }
+      }
+
+      .btn-save {
+        background-color: $primary-color;
+        color: white;
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+
+        &:hover {
+          background-color: $primary-hover;
+        }
+
+        &:active {
+          background-color: $primary-active;
+        }
+      }
+    }
+  }
+
   // Inline Reply
   &__inline-reply {
-    margin-top: 12px;
-    background: #fbfbfb;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 12px;
+    margin-top: $spacing-md;
+    background: $bg-color;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-lg;
+    padding: $spacing-md;
+    box-shadow: $shadow-sm;
+    animation: fadeIn 0.3s ease;
 
     .inline-reply-wrapper {
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .inline-reply-input {
       width: 100%;
       border: none;
-      background: transparent;
+      background: $bg-secondary;
+      padding: 10px 14px;
+      border-radius: $border-radius-md;
       font-size: 14px;
       outline: none;
+      transition:
+        background 0.2s,
+        box-shadow 0.2s;
+      color: $text-primary;
 
       &::placeholder {
-        color: #bfbfbf;
+        color: $text-tertiary;
+      }
+
+      &:focus {
+        background: $bg-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
       }
     }
 
     .inline-reply-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
+      gap: 12px;
+
+      .btn {
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
 
       .btn-sm {
-        padding: 4px 12px;
-        font-size: 12px;
-        border-radius: 12px;
+        padding: 6px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 18px; // softer pill shape for reply buttons
       }
+
+      .btn-cancel {
+        background: transparent;
+        color: $text-tertiary;
+
+        &:hover {
+          color: $text-secondary;
+          background: $bg-hover;
+        }
+      }
+
+      .btn-save {
+        background: $primary-color;
+        color: #fff;
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+
+        &:hover {
+          background: $primary-hover;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba($primary-color, 0.2);
+        }
+
+        &:disabled {
+          background: #d9d9d9;
+          color: rgba(0, 0, 0, 0.25);
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }

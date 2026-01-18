@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use "variables" as *;
 
 * {
   box-sizing: border-box;
@@ -8,10 +8,10 @@
 
 body {
   font-family: $font-family;
-  background-color: $bg-body;
+  background-color: $bg-secondary;
   color: $text-primary;
   -webkit-font-smoothing: antialiased;
-  line-height: 1.34;
+  line-height: $line-height-base;
 }
 
 button {

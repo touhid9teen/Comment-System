@@ -2,87 +2,100 @@
 @use "sass:color";
 
 .comment-input-block {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+  background-color: $bg-color;
   transition: all 0.2s ease;
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-sm;
 
   &.focused {
-    border-color: #000; // Or brand color
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
   }
 
   // Header: Choose a type
   .comment-input-header {
-    padding: 8px 12px;
-    background: #fafafa;
-    border-bottom: 1px solid #f0f0f0;
+    padding: $spacing-sm $spacing-md;
+    background: $bg-secondary;
+    border-bottom: 1px solid $border-color;
 
     .heading {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 13px;
       font-weight: 600;
-      color: #595959;
+      color: $text-secondary;
       background: none;
       border: none;
-      cursor: pointer;
 
-      &:hover {
-        color: #262626;
+      i,
+      svg {
+        color: $primary-color;
       }
     }
   }
 
   .comment-input-body {
-    padding: 12px;
+    padding: $spacing-md;
 
     .comment-textarea {
       width: 100%;
       border: none;
       outline: none;
-      resize: none;
+      resize: vertical;
       font-size: 14px;
-      line-height: 1.5;
-      color: #262626;
+      line-height: $line-height-base;
+      color: $text-primary;
       font-family: inherit;
-      min-height: 100px;
+      min-height: 120px;
+      background: transparent;
 
       &::placeholder {
-        color: #bfbfbf;
+        color: $text-tertiary;
       }
     }
   }
 
   .comment-input-footer {
     display: flex;
-    align-items: end;
-    justify-content: end;
-    padding: 8px 12px;
-    border-top: 1px solid #f0f0f0;
-    background: #fff;
+    align-items: center;
+    justify-content: space-between; // Space between hint/icons and submit
+    padding: $spacing-sm $spacing-md;
+    border-top: 1px solid $border-color;
+    background: $bg-secondary;
+
+    // Optional: Left side controls can go here if added later
 
     .submit-btn {
-      background-color: #1877f2;
+      margin-left: auto;
+      background-color: $primary-color;
       color: white;
       border: none;
-      padding: 6px 16px;
-      border-radius: 4px;
+      padding: 8px 20px;
+      border-radius: $border-radius-md;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.2s;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+      transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 
       &:hover {
-        background-color: color.adjust(#1877f2, $lightness: -8%);
+        background-color: $primary-hover;
+      }
+
+      &:active {
+        background-color: $primary-active;
+        box-shadow: none;
       }
 
       &:disabled {
-        background-color: #aacbff;
+        background-color: #d9d9d9;
+        color: rgba(0, 0, 0, 0.25);
         cursor: not-allowed;
+        box-shadow: none;
       }
     }
   }

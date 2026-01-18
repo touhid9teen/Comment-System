@@ -3,15 +3,15 @@
 .comment-section {
   max-width: 800px;
   margin: 0 auto;
-  padding: 16px;
+  padding: $spacing-md;
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 2px solid $border-color;
 
     h3 {
       font-size: 20px;
@@ -22,7 +22,7 @@
   }
 
   &__list {
-    margin-top: 16px;
+    margin-top: $spacing-lg;
   }
 }
 

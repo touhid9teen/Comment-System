@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .dropdown {
   position: relative;
@@ -17,7 +17,7 @@
     &:hover {
       background-color: $bg-hover;
     }
-    
+
     &-text {
       font-size: 15px;
     }
@@ -28,31 +28,36 @@
     top: 100%;
     left: 0;
     margin-top: 4px;
-    background: $bg-card;
+    background: $bg-color;
     border-radius: 8px;
-    box-shadow: $shadow-2;
+    box-shadow: $shadow-md;
     padding: 8px 0;
     z-index: 100;
     min-width: 200px;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid $border-color;
   }
 
   &__item {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
     text-align: left;
-    padding: 8px 12px;
-    font-size: 15px;
+    padding: 8px 16px;
+    font-size: 14px;
     font-weight: 500;
     color: $text-primary;
-    
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
     &:hover {
       background-color: $bg-hover;
     }
 
     &--selected {
-      background-color: $secondary-blue;
-      color: $primary-blue;
+      background-color: rgba($primary-color, 0.1);
+      color: $primary-color;
+      font-weight: 600;
     }
   }
 }
