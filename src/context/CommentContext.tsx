@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import type { CommentType, SortOption } from "../types";
 import { commentService } from "../services/comment.service";
+import { useSocket } from "./SocketContext";
 
 interface CommentContextType {
   comments: CommentType[]; // Top-level comments (or flat list depending on strategy)
@@ -38,6 +39,7 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>("newest");
+  const { socket } = useSocket();
   // const { isAuthenticated } = useAuth();
 
   // Helper to recusively update the comment tree
@@ -74,6 +76,7 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Helper to find and add reply
+  // Helper to find and add reply (preventing duplicates)
   const addReplyToTree = (
     list: CommentType[],
     parentId: string,
@@ -82,6 +85,10 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
     return list.map((comment) => {
       // If this is the parent comment
       if (comment.id === parentId) {
+        // Check for duplicate
+        if (comment.replies?.some((r) => r.id === newReply.id)) {
+          return comment;
+        }
         // Since we are replying to this comment, it must now have the new reply.
         // We ensure 'replies' array exists.
         return {
@@ -96,13 +103,6 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         return {
           ...comment,
           replies: addReplyToTree(comment.replies, parentId, newReply),
-          // Don't increment count here as it belongs to a child, unless we track total descendants?
-          // Usually replyCount refers to direct children or total. If direct, stop.
-          // If total, we should increment. Based on typical "Show X Replies", it usually means direct children of this node
-          // OR the UI expects the updated node to reflect the change.
-          // Let's assume standard behavior: The parent of the new reply gets incremented.
-          // The current node is an ancestor. If we are traversing down, we don't necessarily increment the ancestor's count
-          // unless it tracks distinct total replies. Let's stick to the direct parent update above.
         };
       }
 
@@ -166,6 +166,59 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
       await fetchComments(pageNum, false);
     }
   };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleCommentCreated = (newComment: CommentType) => {
+      console.log("Socket: comment:created", newComment);
+      if (!newComment.parentId) {
+        setComments((prev) => {
+          if (prev.some((c) => c.id === newComment.id)) return prev;
+          return [newComment, ...prev];
+        });
+      } else {
+        setComments((prev) =>
+          addReplyToTree(prev, newComment.parentId!, newComment),
+        );
+      }
+    };
+
+    const handleCommentUpdated = (updatedComment: CommentType) => {
+      console.log("Socket: comment:updated", updatedComment);
+      setComments((prev) =>
+        updateCommentInTree(prev, updatedComment.id, (c) => ({
+          ...c,
+          ...updatedComment,
+        })),
+      );
+    };
+
+    const handleCommentDeleted = (payload: string | { id: string }) => {
+      console.log("Socket: comment:deleted", payload);
+      const commentId = typeof payload === "string" ? payload : payload.id;
+      setComments((prev) => deleteCommentFromTree(prev, commentId));
+    };
+
+    const handleReacted = (updatedComment: CommentType) => {
+      console.log("Socket: comment:reacted", updatedComment);
+      handleCommentUpdated(updatedComment);
+    };
+
+    socket.on("comment:created", handleCommentCreated);
+    socket.on("comment:reply", handleCommentCreated); // Treat as created
+    socket.on("comment:updated", handleCommentUpdated);
+    socket.on("comment:deleted", handleCommentDeleted);
+    socket.on("comment:reacted", handleReacted);
+
+    return () => {
+      socket.off("comment:created", handleCommentCreated);
+      socket.off("comment:reply", handleCommentCreated);
+      socket.off("comment:updated", handleCommentUpdated);
+      socket.off("comment:deleted", handleCommentDeleted);
+      socket.off("comment:reacted", handleReacted);
+    };
+  }, [socket]);
 
   const createComment = async (content: string) => {
     try {
