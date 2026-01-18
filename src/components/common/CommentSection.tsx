@@ -6,6 +6,8 @@ import "./comment-section.scss";
 import { CommentInput } from "./commentInput";
 import { CommentTree } from "./CommentTree";
 
+import { Pagination } from "../ui/Pagination";
+
 export const CommentSection: React.FC = () => {
   const {
     comments,
@@ -18,6 +20,9 @@ export const CommentSection: React.FC = () => {
     reactToComment,
     loading,
     error,
+    currentPage,
+    totalPages,
+    navigateToPage,
   } = useComments();
 
   // Move loading check down so header is always visible
@@ -59,6 +64,12 @@ export const CommentSection: React.FC = () => {
             onDelete={deleteComment}
           />
         )}
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={navigateToPage}
+        />
       </div>
     </div>
   );

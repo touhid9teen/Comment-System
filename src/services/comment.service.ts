@@ -4,11 +4,20 @@ import type { CommentType } from "../types";
 
 export const commentService = {
   // Get all comments (top-level)
-  getAll: async (sort: string = "newest") => {
-    const response = await api.get<{ success: boolean; data: CommentType[] }>(
-      API_ENDPOINTS.COMMENTS.BASE,
-      { params: { sort } },
-    );
+  getAll: async (
+    sort: string = "newest",
+    page: number = 1,
+    limit: number = 5,
+  ) => {
+    const response = await api.get<{
+      success: boolean;
+      data: {
+        comments: CommentType[];
+        total: number;
+        page: number;
+        totalPages: number;
+      };
+    }>(API_ENDPOINTS.COMMENTS.BASE, { params: { sort, page, limit } });
     return response.data;
   },
 

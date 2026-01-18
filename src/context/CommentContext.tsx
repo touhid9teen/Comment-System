@@ -21,6 +21,12 @@ interface CommentContextType {
   deleteComment: (id: string) => Promise<void>;
   reactToComment: (id: string, type: "like" | "dislike") => Promise<void>;
   fetchReplies: (parentId: string) => Promise<void>;
+  hasMore: boolean;
+  loadMoreComments: () => Promise<void>;
+  totalComments: number;
+  currentPage: number;
+  totalPages: number;
+  navigateToPage: (page: number) => Promise<void>;
 }
 
 const CommentContext = createContext<CommentContextType | undefined>(undefined);
@@ -105,42 +111,61 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const fetchComments = useCallback(async () => {
-    setLoading(true);
-    try {
-      const result = await commentService.getAll(sortOption);
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>", result);
-      if (result.success) {
-        // The backend returns { success: true, data: { comments: [], ... } }
-        // We typed result.data as CommentType[] in service, but actual response checks show it's nested
-        const data = result.data as unknown as
-          | { comments: CommentType[] }
-          | CommentType[];
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalComments, setTotalComments] = useState(0);
 
-        if (Array.isArray(data)) {
-          setComments(data);
-        } else if (
-          data &&
-          Array.isArray((data as { comments: CommentType[] }).comments)
-        ) {
-          setComments((data as { comments: CommentType[] }).comments);
-        } else {
-          setComments([]);
+  const fetchComments = useCallback(
+    async (pageNum: number = 1, append: boolean = false) => {
+      setLoading(true);
+      try {
+        const result = await commentService.getAll(sortOption, pageNum);
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>", result);
+        if (result.success) {
+          const {
+            comments: newComments,
+            total,
+            totalPages: pages,
+          } = result.data;
+
+          setTotalComments(total);
+          setTotalPages(pages);
+          setPage(pageNum);
+
+          if (append) {
+            setComments((prev) => [...prev, ...newComments]);
+          } else {
+            setComments(newComments);
+          }
         }
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load comments");
+      } finally {
+        setLoading(false);
       }
-      setError(null);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load comments");
-    } finally {
-      setLoading(false);
-    }
-  }, [sortOption]);
+    },
+    [sortOption],
+  );
 
   // Initial fetch
   useEffect(() => {
-    fetchComments();
+    fetchComments(1, false);
   }, [fetchComments]);
+
+  const loadMoreComments = async () => {
+    if (page < totalPages) {
+      await fetchComments(page + 1, true);
+    }
+  };
+
+  const navigateToPage = async (pageNum: number) => {
+    if (pageNum >= 1 && pageNum <= totalPages && pageNum !== page) {
+      await fetchComments(pageNum, false);
+    }
+  };
 
   const createComment = async (content: string) => {
     try {
@@ -324,6 +349,12 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         deleteComment,
         reactToComment,
         fetchReplies,
+        hasMore: page < totalPages,
+        loadMoreComments,
+        totalComments,
+        currentPage: page,
+        totalPages,
+        navigateToPage,
       }}
     >
       {children}
