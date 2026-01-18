@@ -258,21 +258,12 @@
       border: none;
       background: $bg-secondary;
       padding: 10px 14px;
-      border-radius: $border-radius-md;
       font-size: 14px;
       outline: none;
-      transition:
-        background 0.2s,
-        box-shadow 0.2s;
       color: $text-primary;
 
       &::placeholder {
         color: $text-tertiary;
-      }
-
-      &:focus {
-        background: $bg-color;
-        box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
       }
     }
 
