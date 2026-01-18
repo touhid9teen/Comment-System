@@ -3,6 +3,7 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
   type FC,
   type ReactNode,
 } from "react";
@@ -67,8 +68,11 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setState(auth);
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
+      // Optional: Call backend to ensure cookies are cleared server-side (if meaningful)
+      // await api.post(API_ENDPOINTS.AUTH.LOGOUT);
+
       setState({
         user: null,
         token: null,
@@ -77,7 +81,24 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     } catch (error) {
       console.error("Logout failed:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Intercept 401 responses to auto-logout
+    const interceptorId = api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      api.interceptors.response.eject(interceptorId);
+    };
+  }, [logout]);
 
   return (
     <AuthContext.Provider
