@@ -81,6 +81,7 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         return {
           ...comment,
           replies: [newReply, ...(comment.replies || [])],
+          replyCount: (comment.replyCount || comment.replies?.length || 0) + 1,
         };
       }
 
@@ -89,6 +90,13 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         return {
           ...comment,
           replies: addReplyToTree(comment.replies, parentId, newReply),
+          // Don't increment count here as it belongs to a child, unless we track total descendants?
+          // Usually replyCount refers to direct children or total. If direct, stop.
+          // If total, we should increment. Based on typical "Show X Replies", it usually means direct children of this node
+          // OR the UI expects the updated node to reflect the change.
+          // Let's assume standard behavior: The parent of the new reply gets incremented.
+          // The current node is an ancestor. If we are traversing down, we don't necessarily increment the ancestor's count
+          // unless it tracks distinct total replies. Let's stick to the direct parent update above.
         };
       }
 
@@ -139,8 +147,10 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         const data: any = result.data;
         const newComment = data.comment || data;
 
-        // Check if the new comment has user info (create endpoint sometimes just returns userId)
+        // Check if the new comment has user info
         if (newComment.user && newComment.user.name) {
+          // Initialize replyCount for consistency
+          newComment.replyCount = 0;
           setComments((prev) => [newComment, ...prev]);
         } else {
           // If user data is missing (common in some APIs that don't populate on create), we must refetch or patch it manually
@@ -164,8 +174,11 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         const newReply = data.comment || data;
         if (newReply.user && newReply.user.name) {
           setComments((prev) => addReplyToTree(prev, parentId, newReply));
+          // Sync with server to ensure correct count and data consistency
+          fetchReplies(parentId);
         } else {
-          fetchComments();
+          // If immediate response is partial, fetch just the replies for this parent to update the tree node
+          fetchReplies(parentId);
         }
       }
     } catch (err) {
@@ -245,7 +258,11 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         setComments((prev) =>
           prev.map((comment) => {
             if (comment.id === parentId) {
-              return { ...comment, replies: replies };
+              return {
+                ...comment,
+                replies: replies,
+                replyCount: replies.length,
+              };
             }
             // If we supported deep nesting fetch, we'd search recursively.
             // For now, assume we fetch replies for a known comment in the tree.
