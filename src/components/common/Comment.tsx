@@ -7,6 +7,7 @@ import { Avatar } from "../ui/Avatar";
 import { useAuth } from "../../context/AuthContext";
 import { AuthModal } from "./AuthModal";
 import "./comment.scss";
+import { useComments } from "../../context/CommentContext";
 
 interface CommentProps {
   comment: CommentType;
@@ -59,12 +60,17 @@ export const Comment: React.FC<CommentProps> = ({
     onReact(comment.id, type);
   };
 
-  const handleReplySubmit = () => {
+  const handleReplySubmit = async () => {
     if (!replyText.trim()) return;
-    onReply(comment.id, replyText);
-    setReplyText("");
-    setIsReplying(false);
-    setAreRepliesVisible(true); // Auto show replies after replying
+    try {
+      await onReply(comment.id, replyText);
+      setReplyText("");
+      setIsReplying(false);
+      setAreRepliesVisible(true); // Auto show replies after replying
+    } catch (error) {
+      console.error("Failed to reply:", error);
+      // Optional: show a toast or error state here
+    }
   };
 
   const handleEditSave = () => {
@@ -74,7 +80,21 @@ export const Comment: React.FC<CommentProps> = ({
     }
   };
 
-  const numReplies = comment.replies?.length || 0;
+  const { fetchReplies } = useComments();
+  const numReplies = comment.replyCount || comment.replies?.length || 0;
+
+  const toggleReplies = () => {
+    if (!areRepliesVisible) {
+      // logic to fetch if not present
+      if (
+        numReplies > 0 &&
+        (!comment.replies || comment.replies.length === 0)
+      ) {
+        fetchReplies(comment.id);
+      }
+    }
+    setAreRepliesVisible(!areRepliesVisible);
+  };
 
   return (
     <div className={`comment ${isNestedBeyondLimit ? "comment--flat" : ""}`}>
@@ -162,10 +182,7 @@ export const Comment: React.FC<CommentProps> = ({
 
             {/* Toggle Replies Button */}
             {numReplies > 0 && (
-              <button
-                className="action-btn"
-                onClick={() => setAreRepliesVisible(!areRepliesVisible)}
-              >
+              <button className="action-btn" onClick={toggleReplies}>
                 <CommentIcon size={16} />
                 {areRepliesVisible
                   ? "Hide Replies"

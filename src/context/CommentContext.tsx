@@ -20,6 +20,7 @@ interface CommentContextType {
   updateComment: (id: string, content: string) => Promise<void>;
   deleteComment: (id: string) => Promise<void>;
   reactToComment: (id: string, type: "like" | "dislike") => Promise<void>;
+  fetchReplies: (parentId: string) => Promise<void>;
 }
 
 const CommentContext = createContext<CommentContextType | undefined>(undefined);
@@ -226,6 +227,49 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const fetchReplies = async (parentId: string) => {
+    try {
+      const result = await commentService.getReplies(parentId);
+      if (result.success) {
+        // Cast as necessary based on unknown structure (similar to other endpoints)
+        const data: any = result.data;
+        let replies = [];
+
+        if (Array.isArray(data)) {
+          replies = data;
+        } else if (data && Array.isArray(data.comments)) {
+          replies = data.comments;
+        }
+
+        // Update the tree with fetched replies
+        setComments((prev) =>
+          prev.map((comment) => {
+            if (comment.id === parentId) {
+              return { ...comment, replies: replies };
+            }
+            // If we supported deep nesting fetch, we'd search recursively.
+            // For now, assume we fetch replies for a known comment in the tree.
+            // Recursive search for parentId:
+            const updateReplies = (list: CommentType[]): CommentType[] => {
+              return list.map((c) => {
+                if (c.id === parentId) {
+                  return { ...c, replies: replies };
+                }
+                if (c.replies) {
+                  return { ...c, replies: updateReplies(c.replies) };
+                }
+                return c;
+              });
+            };
+            return updateReplies([comment])[0];
+          }),
+        );
+      }
+    } catch (err) {
+      console.error("Failed to fetch replies", err);
+    }
+  };
+
   return (
     <CommentContext.Provider
       value={{
@@ -240,6 +284,7 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         updateComment,
         deleteComment,
         reactToComment,
+        fetchReplies,
       }}
     >
       {children}

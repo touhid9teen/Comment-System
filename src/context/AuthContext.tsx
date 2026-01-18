@@ -34,10 +34,19 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         );
 
         console.log("Profile Data:", response.data);
+        // Check if token comes with profile (sometimes used instead of just cookies)
+        const responseData = response.data as any; // Cast to access potential dynamic fields
+        const token = responseData.token || responseData.data?.token;
+
         if (response.data.success && response.data.data) {
+          // If we received a token, set it in defaults (handling hybrid cookie/token auth)
+          if (token) {
+            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          }
+
           setState({
             user: response.data.data,
-            token: null, // Correct: Token is handled by session cookies
+            token: token || null,
             isAuthenticated: true,
           });
         }

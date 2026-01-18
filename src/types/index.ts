@@ -5,20 +5,20 @@ export interface User {
   email: string;
 }
 
-
 export interface CommentType {
   id: string;
   userId: string;
-  user: User; 
+  user: User;
   content: string;
-  createdAt: string; 
+  createdAt: string;
   parentId: string | null;
-  likes: string[]; 
+  likes: string[];
   dislikes: string[];
-  replies?: CommentType[]; 
+  replies?: CommentType[];
+  replyCount?: number;
 }
 
-export type SortOption = 'newest' | 'most-liked' | 'most-disliked';
+export type SortOption = "newest" | "most-liked" | "most-disliked";
 
 export interface AuthState {
   user: User | null;
