@@ -73,18 +73,25 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
     newReply: CommentType,
   ): CommentType[] => {
     return list.map((comment) => {
+      // If this is the parent comment
       if (comment.id === parentId) {
+        // Since we are replying to this comment, it must now have the new reply.
+        // We ensure 'replies' array exists.
         return {
           ...comment,
           replies: [newReply, ...(comment.replies || [])],
         };
       }
-      if (comment.replies) {
+
+      // If the comment has existing replies, we need to search recursively within them
+      if (comment.replies && comment.replies.length > 0) {
         return {
           ...comment,
           replies: addReplyToTree(comment.replies, parentId, newReply),
         };
       }
+
+      // Return unchanged comment otherwise
       return comment;
     });
   };
@@ -124,11 +131,25 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   const createComment = async (content: string) => {
     try {
       const result = await commentService.create(content);
+      console.log("Create Comment Result:", result);
+
       if (result.success) {
-        setComments((prev) => [result.data, ...prev]);
+        // Handle potential nested data structure like { data: { comment: ... } } or just { data: ... }
+        const data: any = result.data;
+        const newComment = data.comment || data;
+
+        // Check if the new comment has user info (create endpoint sometimes just returns userId)
+        if (newComment.user && newComment.user.name) {
+          setComments((prev) => [newComment, ...prev]);
+        } else {
+          // If user data is missing (common in some APIs that don't populate on create), we must refetch or patch it manually
+          // For now, let's just refetch to be safe and ensure UI consistency
+          fetchComments();
+        }
       }
     } catch (err) {
       console.error(err);
+      // Optional: setError("Failed to create comment");
       throw err;
     }
   };
@@ -136,8 +157,15 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   const replyToComment = async (parentId: string, content: string) => {
     try {
       const result = await commentService.reply(parentId, content);
+      console.log("Reply Result:", result);
       if (result.success) {
-        setComments((prev) => addReplyToTree(prev, parentId, result.data));
+        const data: any = result.data;
+        const newReply = data.comment || data;
+        if (newReply.user && newReply.user.name) {
+          setComments((prev) => addReplyToTree(prev, parentId, newReply));
+        } else {
+          fetchComments();
+        }
       }
     } catch (err) {
       console.error(err);
@@ -148,11 +176,14 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateComment = async (id: string, content: string) => {
     try {
       const result = await commentService.update(id, content);
+      console.log("Update Result:", result);
       if (result.success) {
+        const data: any = result.data;
+        const updatedComment = data.comment || data;
         setComments((prev) =>
           updateCommentInTree(prev, id, (c) => ({
             ...c,
-            content: result.data.content,
+            content: updatedComment.content,
           })),
         );
       }
@@ -175,18 +206,18 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const reactToComment = async (id: string, type: "like" | "dislike") => {
-    // Optimistic update could be complex without user ID, so we'll wait for server for accuracy
-    // OR we can guess if we have the current user ID.
-    // Let's rely on server response for now to ensure consistency,
-    // but typically we'd do optimistic updates for "snappiness".
     try {
       const result = await commentService.react(id, type);
+      console.log("React Result:", result);
       if (result.success) {
+        const data: any = result.data;
+        const updatedStats = data.comment || data; // Assuming it returns the updated comment or stats
+
         setComments((prev) =>
           updateCommentInTree(prev, id, (c) => ({
             ...c,
-            likes: result.data.likes,
-            dislikes: result.data.dislikes,
+            likes: updatedStats.likes,
+            dislikes: updatedStats.dislikes,
           })),
         );
       }

@@ -81,21 +81,31 @@ export const Comment: React.FC<CommentProps> = ({
       <div className="comment__container">
         <div className="comment__avatar">
           <Avatar
-            src={comment.user.avatarUrl}
-            fallback={comment.user.name[0]}
+            src={comment.user?.avatarUrl}
+            fallback={comment.user?.name?.[0] || "?"}
             size="md"
           />
         </div>
 
         <div className="comment__main">
           <div className="comment__header">
-            <span className="comment__author">{comment.user.name}</span>
+            <span className="comment__author">
+              {comment.user?.name || "Unknown User"}
+            </span>
             {/* Mock Badge */}
 
             <span className="comment-time">
-              {formatDistanceToNow(new Date(comment.createdAt), {
-                addSuffix: true,
-              })}
+              {(() => {
+                try {
+                  return comment.createdAt
+                    ? formatDistanceToNow(new Date(comment.createdAt), {
+                        addSuffix: true,
+                      })
+                    : "just now";
+                } catch (e) {
+                  return "just now";
+                }
+              })()}
             </span>
           </div>
 
