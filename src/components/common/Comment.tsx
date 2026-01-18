@@ -66,7 +66,11 @@ export const Comment: React.FC<CommentProps> = ({
       await onReply(comment.id, replyText);
       setReplyText("");
       setIsReplying(false);
-      setAreRepliesVisible(true); // Auto show replies after replying
+      // We rely on the parent updating the comment prop to show the new reply
+      // But we should ensure we are in a state to show it.
+      if (!areRepliesVisible) {
+        setAreRepliesVisible(true);
+      }
     } catch (error) {
       console.error("Failed to reply:", error);
       // Optional: show a toast or error state here
