@@ -1,23 +1,15 @@
 import { useState } from "react";
 import { Avatar } from "../components/ui/Avatar";
 import "./home.scss";
-import { UpvoteIcon, DownvoteIcon, CommentIcon } from "../components/ui/Icons";
+import { CommentIcon } from "../components/ui/Icons";
 import { CommentSection } from "../components/common/CommentSection";
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import { AuthModal } from "../components/common/AuthModal";
 
 export const Home: React.FC = () => {
   const [showComments, setShowComments] = useState(false);
-  const { isAuthenticated } = useAuth();
+  // const { isAuthenticated } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
-
-  const handleActionClick = (action: () => void) => {
-    if (!isAuthenticated) {
-      setShowAuthModal(true);
-      return;
-    }
-    action();
-  };
 
   return (
     <div className="home-page">
@@ -41,14 +33,14 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Post Stats */}
-        <div className="post-stats">
+        {/* <div className="post-stats">
           <span>1.2K Likes</span>
           <span>45 Comments</span>
-        </div>
+        </div> */}
 
         {/* Post Actions */}
         <div className="post-actions">
-          <button
+          {/* <button
             className="action-btn"
             onClick={() => handleActionClick(() => {})}
           >
@@ -59,7 +51,7 @@ export const Home: React.FC = () => {
             onClick={() => handleActionClick(() => {})}
           >
             <DownvoteIcon /> 6
-          </button>
+          </button> */}
           <button
             className="action-btn"
             onClick={() => setShowComments(!showComments)}

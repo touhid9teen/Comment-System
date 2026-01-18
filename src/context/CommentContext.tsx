@@ -190,6 +190,16 @@ export const CommentProvider: React.FC<{ children: React.ReactNode }> = ({
         updateCommentInTree(prev, updatedComment.id, (c) => ({
           ...c,
           ...updatedComment,
+          // Preserve important fields that might be missing or unpopulated in the update payload
+          user:
+            updatedComment.user &&
+            typeof updatedComment.user === "object" &&
+            updatedComment.user.name
+              ? updatedComment.user
+              : c.user,
+          userId: updatedComment.userId || c.userId,
+          // Updates to content/likes shouldn't wipe out the replies tree
+          replies: c.replies,
         })),
       );
     };
