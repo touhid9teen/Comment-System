@@ -38,10 +38,11 @@
     align-items: center;
     gap: 8px;
     font-weight: 600;
-  }
+  } 
 
-  .logout-btn {
-    background: $bg-hover;
+  .logout-btn,
+  .login-btn {
+    // background: $bg-hover;
     padding: 6px 12px;
     border-radius: 6px;
     font-weight: 600;

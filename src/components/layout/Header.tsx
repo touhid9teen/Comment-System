@@ -3,10 +3,14 @@ import { useAuth } from "../../context/AuthContext";
 import { Avatar } from "../ui/Avatar";
 
 import "./header.scss";
-import { GoogleLoginButton } from "../common/GoogleLoginButton";
+import { API_ENDPOINTS } from "../../config/api";
 
 export const Header: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
+  const handleGoogleLogin = () => {
+      // Redirect to backend Google OAuth endpoint
+      window.location.href = API_ENDPOINTS.AUTH.GOOGLE;
+    };
 
   return (
     <header className="app-header">
@@ -24,7 +28,9 @@ export const Header: React.FC = () => {
               </button>
             </>
           ) : (
-            <GoogleLoginButton />
+            <button onClick={handleGoogleLogin} className="login-btn">
+              Login
+            </button>         
           )}
         </div>
       </div>
