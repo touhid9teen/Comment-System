@@ -25,7 +25,7 @@ export const Header: React.FC = () => {
                   <>
                     <div className="user-info">
                       <Avatar src={user.avatarUrl} size="sm" />
-                      <span>{user.name}</span>
+                      <span className="user-name">{user.name}</span>
                     </div>
                     <button onClick={logout} className="logout-btn">
                       Log Out
