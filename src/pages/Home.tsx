@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { Avatar } from "../components/ui/Avatar";
-import "./home.scss";
-import { CommentIcon } from "../components/ui/Icons";
-import { CommentSection } from "../components/common/CommentSection";
-import { useAuth } from "../context/AuthContext";
 import { AuthModal } from "../components/common/AuthModal";
+import { CommentSection } from "../components/common/CommentSection";
+import { Avatar } from "../components/ui/Avatar";
+import { CommentIcon } from "../components/ui/Icons";
 import { useComments } from "../context/CommentContext";
+import "./home.scss";
 
 export const Home: React.FC = () => {
   const [showComments, setShowComments] = useState(false);
-  const { isAuthenticated } = useAuth();
   const { totalComments } = useComments();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -57,11 +55,7 @@ export const Home: React.FC = () => {
           <button
             className="action-btn"
             onClick={() => {
-              if (!isAuthenticated) {
-                setShowAuthModal(true);
-              } else {
-                setShowComments(!showComments);
-              }
+              setShowComments(!showComments);
             }}
           >
             <CommentIcon />{" "}
