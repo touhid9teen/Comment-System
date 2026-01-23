@@ -38,7 +38,7 @@ This project is built using the latest modern web technologies:
 
 - **Socket.io-client**: `^4.8.3` - Real-time bidirectional event-based communication.
 - **Axios**: `^1.13.2` - Promise based HTTP client.
-- **React Query / Context API**: Custom context-based state management (`CommentContext`, `AuthContext`).
+- **Context API**: Custom context-based state management (`CommentContext`, `AuthContext`).
 
 ### **Forms & Validation**
 
