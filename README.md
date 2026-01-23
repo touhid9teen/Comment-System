@@ -1,4 +1,4 @@
-# 💬 Real-Time Comment Module
+# 💬 Real-Time Comment System
 
 A modern, professional, and fully interactive comment system built with **React** and **TypeScript**. This project features real-time updates using WebSockets, nested replies, efficient state management, and a clean, responsive UI.
 
