@@ -16,10 +16,12 @@ export const Loader: React.FC<LoaderProps> = ({
 }) => {
   return (
     <div
-      className={`loader-container ${fullScreen ? "full-screen" : ""} ${className}`}
+      className={`loader-container ${
+        fullScreen ? "full-screen" : ""
+      } ${className}`}
     >
       <div className={`spinner ${size} ${color}`} role="status">
-        <span className="sr-only">Loading...</span>
+        {/* <span className="sr-only">Loading...</span> */}
       </div>
     </div>
   );
