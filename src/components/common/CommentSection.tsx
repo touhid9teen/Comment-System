@@ -7,6 +7,7 @@ import { CommentInput } from "./commentInput";
 import { CommentTree } from "./CommentTree";
 
 import { Pagination } from "../ui/Pagination";
+import { Loader } from "../ui/Loader";
 
 export const CommentSection: React.FC = () => {
   const {
@@ -24,11 +25,6 @@ export const CommentSection: React.FC = () => {
     totalPages,
     navigateToPage,
   } = useComments();
-
-  // Move loading check down so header is always visible
-  // if (loading && comments.length === 0) {
-  //   return <div className="comment-section-loading">Loading comments...</div>;
-  // }
 
   if (error) {
     return <div className="comment-section-error">{error}</div>;
@@ -49,7 +45,7 @@ export const CommentSection: React.FC = () => {
       <CommentInput onSubmit={createComment} />
       <div className="comment-section__list">
         {loading && comments.length === 0 ? (
-          <div className="comment-section-loading">Loading comments...</div>
+          <Loader size="lg" />
         ) : comments.length === 0 ? (
           <div className="comment-section-empty">
             No comments yet. Be the first to share your thoughts!

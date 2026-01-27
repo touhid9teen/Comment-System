@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Avatar } from "../ui/Avatar";
 import { AuthModal } from "../common/AuthModal";
+import { Loader } from "../ui/Loader";
 
 import "./header.scss";
 
@@ -19,7 +20,9 @@ export const Header: React.FC = () => {
         <div className="container">
           <h1 className="logo">SocialApp</h1>
           <div className="header-actions">
-            {!loading && (
+            {loading ? (
+              <Loader size="sm" />
+            ) : (
               <>
                 {isAuthenticated && user ? (
                   <>
