@@ -5,24 +5,30 @@ import { CommentProvider } from "./context/CommentContext";
 import { SocketProvider } from "./context/SocketContext";
 import { Home } from "./pages/Home";
 
+import { LoaderProvider } from "./context/LoaderContext";
+import { InitialLoader } from "./components/common/InitialLoader";
+
 function App() {
   return (
-    <AuthProvider>
-      <SocketProvider>
-        <CommentProvider>
-          <Router>
-            <div className="app-layout">
-              <Header />
-              <main>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                </Routes>
-              </main>
-            </div>
-          </Router>
-        </CommentProvider>
-      </SocketProvider>
-    </AuthProvider>
+    <LoaderProvider>
+      <InitialLoader />
+      <AuthProvider>
+        <SocketProvider>
+          <CommentProvider>
+            <Router>
+              <div className="app-layout">
+                <Header />
+                <main>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                  </Routes>
+                </main>
+              </div>
+            </Router>
+          </CommentProvider>
+        </SocketProvider>
+      </AuthProvider>
+    </LoaderProvider>
   );
 }
 

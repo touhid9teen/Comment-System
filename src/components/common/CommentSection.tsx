@@ -45,7 +45,7 @@ export const CommentSection: React.FC = () => {
       <CommentInput onSubmit={createComment} />
       <div className="comment-section__list">
         {loading && comments.length === 0 ? (
-          <Loader size="lg" />
+          <Loader size="lg" fullScreen />
         ) : comments.length === 0 ? (
           <div className="comment-section-empty">
             No comments yet. Be the first to share your thoughts!

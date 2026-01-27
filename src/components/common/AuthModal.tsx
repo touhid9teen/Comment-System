@@ -8,11 +8,23 @@ interface AuthModalProps {
   title?: string;
 }
 
+import { useLoader } from "../../context/LoaderContext";
+
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   title = "Log in to continue",
 }) => {
+  const { showLoader } = useLoader();
+
+  const handleGoogleLogin = () => {
+    onClose(); // Close modal first
+    showLoader();
+    setTimeout(() => {
+      window.location.href = API_ENDPOINTS.AUTH.GOOGLE;
+    }, 1500); // 1.5s delay
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div style={{ padding: "20px", textAlign: "center" }}>
@@ -20,7 +32,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           Please log in to join the discussion.
         </p>
         <button
-          onClick={() => (window.location.href = API_ENDPOINTS.AUTH.GOOGLE)}
+          onClick={handleGoogleLogin}
           style={{
             display: "flex",
             alignItems: "center",

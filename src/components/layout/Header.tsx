@@ -3,15 +3,25 @@ import { useAuth } from "../../context/AuthContext";
 import { Avatar } from "../ui/Avatar";
 import { AuthModal } from "../common/AuthModal";
 import { Loader } from "../ui/Loader";
+import { useLoader } from "../../context/LoaderContext";
 
 import "./header.scss";
 
 export const Header: React.FC = () => {
   const { user, logout, isAuthenticated, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const { showLoader, hideLoader } = useLoader();
 
   const handleLoginClick = () => {
     setShowAuthModal(true);
+  };
+
+  const handleLogout = async () => {
+    showLoader();
+    setTimeout(async () => {
+      await logout();
+      hideLoader();
+    }, 1500); // 1.5s delay
   };
 
   return (
@@ -30,7 +40,7 @@ export const Header: React.FC = () => {
                       <Avatar src={user.avatarUrl} size="sm" />
                       <span className="user-name">{user.name}</span>
                     </div>
-                    <button onClick={logout} className="logout-btn">
+                    <button onClick={handleLogout} className="logout-btn">
                       Log Out
                     </button>
                   </>
